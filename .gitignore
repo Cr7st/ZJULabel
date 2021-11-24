@@ -1,3 +1,5 @@
 venv
 node_modules
 secret_key
+.idea
+package-lock.json

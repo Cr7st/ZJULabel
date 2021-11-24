@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-f = open('D:/BS/ZJULabel/backend/backend/secret_key.txt', 'r')
+f = open('backend/secret_key.txt', 'r')
 SECRET_KEY = f.readline()
 
 # SECURITY WARNING: don't run with debug turned on in production!
