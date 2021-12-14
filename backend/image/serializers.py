@@ -2,8 +2,8 @@ from rest_framework import serializers
 from .models import ImageModel
 
 
-class FileSerializer(serializers.Serializer):
-    image = serializers.FileField()
+class FileUploadSerializer(serializers.Serializer):
+    file = serializers.FileField()
     type = serializers.ChoiceField(choices=[('IMAGE', 'image'), ('VIDEO', 'video')])
 
 

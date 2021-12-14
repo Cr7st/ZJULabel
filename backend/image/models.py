@@ -8,4 +8,3 @@ class ImageModel(models.Model):
     id = models.AutoField(primary_key=True)
     uploader = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     image = models.ImageField(upload_to="images/")
-    

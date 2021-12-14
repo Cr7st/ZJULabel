@@ -21,5 +21,7 @@ from user.urls import router as user_router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(image_router.urls + user_router.urls)),
+    path('api/', include('user.urls')),
+    path('api/', include('image.urls')),
+    path('api/', include('task.urls'))
 ]
