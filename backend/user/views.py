@@ -31,7 +31,7 @@ class UserView(viewsets.ModelViewSet):
     def login(self, request):
         serializer = UserSerializer(data=request.data)
         print(request.data)
-        if 'username' not in serializer.initial_data or 'password' not in serializer:
+        if 'username' not in serializer.initial_data or 'password' not in serializer.initial_data:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         username = serializer.initial_data['username']
         password = serializer.initial_data['password']

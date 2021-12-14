@@ -3,3 +3,5 @@ node_modules
 secret_key
 .idea
 package-lock.json
+media
+db.sqlite3
