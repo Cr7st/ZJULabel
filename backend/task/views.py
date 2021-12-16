@@ -28,6 +28,11 @@ class TaskView(viewsets.ModelViewSet):
         new_task.images.set(images)
         return Response(status=status.HTTP_200_OK)
 
-    @action(methods=['GET'], url_path='list_mine', detail=True)
+    @action(methods=['GET'], url_path='list_mine', detail=False)
     def list_mine(self, request):
-        return Response(TaskModel.objects.filter(uploader=request.user))
+        models = TaskModel.objects.filter(uploader=request.user)
+        data_list = []
+        for model in models:
+            serializer = self.serializer_class(instance=model)
+            data_list.append(serializer.data)
+        return Response(data_list)

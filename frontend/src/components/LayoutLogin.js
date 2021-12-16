@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Menu, Icon } from 'antd';
+import { Layout } from 'antd';
 
 
 class LayoutLogin extends React.Component {

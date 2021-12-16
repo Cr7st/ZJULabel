@@ -1,9 +1,8 @@
 import * as React from 'react';
-import {List, Avatar, Button, Skeleton} from 'antd';
-import reqwest from 'reqwest';
+import {List, Button, Skeleton} from 'antd';
+import axios from 'axios';
 
 const count = 5;
-const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat&noinfo`;
 
 class LoadMore extends React.Component {
   state = {
@@ -17,33 +16,27 @@ class LoadMore extends React.Component {
     this.getData (res => {
       this.setState ({
         initLoading: false,
-        data: res.results,
-        list: res.results,
+        data: res.data,
+        list: res.data,
       });
     });
   }
 
   getData = callback => {
-    reqwest ({
-      url: fakeDataUrl,
-      type: 'json',
-      method: 'get',
-      contentType: 'application/json',
-      success: res => {
-        callback (res);
-      },
-    });
+    axios.get(this.props.url, {withCredentials: true}).then( res =>
+      callback(res)
+    ).catch(err => {
+      console.log(err)
+    })
   };
 
   onLoadMore = () => {
     this.setState ({
       loading: true,
-      list: this.state.data.concat (
-        [...new Array (count)].map (() => ({loading: true, name: {}}))
-      ),
+      list: this.state.list.map(() => ({loading: true, name: {}}))
     });
     this.getData (res => {
-      const data = this.state.data.concat (res.results);
+      const data = res.data;
       this.setState (
         {
           data,
@@ -71,7 +64,7 @@ class LoadMore extends React.Component {
             lineHeight: '32px',
           }}
         >
-          <Button onClick={this.onLoadMore}>loading more</Button>
+          <Button onClick={this.onLoadMore}>refresh</Button>
         </div>
       : null;
 
@@ -83,16 +76,13 @@ class LoadMore extends React.Component {
         loadMore={loadMore}
         dataSource={list}
         renderItem={item => (
-          <List.Item actions={[<a>edit</a>, <a>more</a>]}>
-            <Skeleton avatar title={false} loading={item.loading} active>
+          <List.Item actions={[<a>accept</a>]}>
+            <Skeleton title={false} loading={item.loading} active>
               <List.Item.Meta
-                avatar={
-                  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                }
-                title={<a href="https://ant.design">{item.name.last}</a>}
-                description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                title={item.name}
+                description={item.description}
               />
-              <div>content</div>
+              <div>Due {item.end_date}</div>
             </Skeleton>
           </List.Item>
         )}

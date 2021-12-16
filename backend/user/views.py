@@ -21,6 +21,7 @@ class UserView(viewsets.ModelViewSet):
             email = serializer.data['email']
             user = User.objects.create_user(username=username, email=email, password=password)
             if user.is_active:
+                login(request, user)
                 return Response(status=status.HTTP_201_CREATED)
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -40,9 +41,10 @@ class UserView(viewsets.ModelViewSet):
             login(request, user)
             return Response(status=status.HTTP_200_OK)
         else:
-            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(status=status.HTTP_200_OK, data='login fail')
 
     @action(methods=['GET'], url_path='logout', detail=False)
     def logout(self, request):
         logout(request)
+        request.session.delete()
         return Response(status=status.HTTP_200_OK)

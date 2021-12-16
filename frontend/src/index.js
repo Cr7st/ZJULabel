@@ -24,9 +24,8 @@ import Typography from './pages/components/typography';
 import BasicCalendar from './pages/calendar/basic-calendar';
 import NoticeCalendar from './pages/calendar/notice-calendar';
 import SelectableCalendar from './pages/calendar/selectable-calendar';
-import List from './pages/data-display/list';
-import Tooltip from './pages/data-display/tooltip-popover';
-import Carousel from './pages/data-display/carousel';
+import List from './pages/list';
+import ListMine from "./pages/list_mine";
 import Charts from './pages/charts';
 import Profile from './pages/profile';
 import Table from './pages/table';
@@ -65,9 +64,11 @@ const routing = (
     <Switch>
 
       <Route exact path="/" component={Login} />
+      <Route exact path="/list" component={List} />
       <Route exact path="/register" component={Register} />
+      {/* <Route exact path="/upload" component={Upload} /> */}
       <Route exact path="/dashboard" component={Dashboard} />
-      <Route exact path="/layout/grid" component={Grid} />
+      <Route exact path="/list_mine" component={ListMine} />
       <Route exact path="/layout/gridLayout" component={GridLayout} />
       <Route exact path="/form/form-elements" component={FormElements} />
       <Route exact path="/form/form-controls" component={FormControls} />
@@ -91,9 +92,6 @@ const routing = (
         path="/calendar/selectable-calendar"
         component={SelectableCalendar}
       />
-      <Route exact path="/data-display/list" component={List} />
-      <Route exact path="/data-display/tooltip-popover" component={Tooltip} />
-      <Route exact path="/data-display/carousel" component={Carousel} />
       <Route exact path="/charts" component={Charts} />
       <Route exact path="/profile" component={Profile} />
       <Route exact path="/table" component={Table} />
