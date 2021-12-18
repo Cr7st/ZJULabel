@@ -49,6 +49,7 @@ class UploadPage extends React.Component {
             if (err.response){
                 if (err.response.status === 403){
                     message.error(`You have to login first!`);
+                    this.setState({loggin: false});
                 }
             }
             console.log(err);

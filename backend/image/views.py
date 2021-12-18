@@ -1,9 +1,10 @@
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status, viewsets
-from .serializers import FileUploadSerializer, ImageModelSerializer
+from .serializers import FileUploadSerializer, ImageModelSerializer, ImagePreviewSerializer
 from .models import ImageModel
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import JSONRenderer
 from PIL import Image
 
 # Create your views here.
@@ -24,6 +25,7 @@ class ImageView(viewsets.ModelViewSet):
     @action(methods=['POST'], url_path='upload', detail=False)
     def upload(self, request):
         serializer = FileUploadSerializer(data=request.data)
+        print(serializer.initial_data)
         if not serializer.is_valid():
             print(serializer.initial_data)
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -39,3 +41,13 @@ class ImageView(viewsets.ModelViewSet):
             images = get_images_from_video(file)
             for image in images:
                 ImageModel.objects.create(uploader=user, image=image)
+
+    @action(methods=['GET'], url_path='pre_list', detail=False)
+    def pre_list(self, request):
+        queryset = self.get_queryset()
+        json = []
+        for object in queryset:
+            serializer = ImagePreviewSerializer(object)
+            json.append(serializer.data)
+        print(json)
+        return Response(data=json)

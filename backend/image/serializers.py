@@ -12,3 +12,9 @@ class ImageModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageModel
         fields = ['id', 'image', 'name']
+
+
+class ImagePreviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageModel
+        fields = ['id', 'name']

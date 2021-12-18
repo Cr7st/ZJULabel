@@ -15,7 +15,6 @@ class Login extends React.Component {
       if (!err) {
         console.log ('Login values: ', values);
         axios.get('http://localhost:8000/api/users/logout/', {withCredentials: true}).then(res =>{
-          console.log('wtf');
           axios.post('http://localhost:8000/api/users/login/', values, {withCredentials: true}).then(res => {
             if (res.status == 200){
               if (res.data == 'login fail')
