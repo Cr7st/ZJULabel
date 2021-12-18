@@ -14,17 +14,32 @@ class Login extends React.Component {
     this.props.form.validateFields ((err, values) => {
       if (!err) {
         console.log ('Login values: ', values);
-        axios.post('http://localhost:8000/api/users/login/', values, {withCredentials: true}).then(res => {
-          if (res.status == 200){
-            if (res.data == 'login fail')
-              this.setState({wrong_msg: 'Wrong password or user doesn\'t exist'});
-            else
-              this.props.history.push('/dashboard');
-          }
-        }).catch(err => {
-          console.log(err);
-          this.setState({wrong_msg: 'An error took place'})
-        })
+        axios.get('http://localhost:8000/api/users/logout/', {withCredentials: true}).then(res =>{
+          console.log('wtf');
+          axios.post('http://localhost:8000/api/users/login/', values, {withCredentials: true}).then(res => {
+            if (res.status == 200){
+              if (res.data == 'login fail')
+                this.setState({wrong_msg: 'Wrong password or user doesn\'t exist'});
+              else
+                this.props.history.push('/dashboard');
+            }
+          }).catch(err => {
+            console.log(err);
+            if (err.response)
+              this.setState({wrong_msg: err.response.data.detail})
+            else {
+              this.setState({wrong_msg: 'Server busy or not down'})
+            }
+          })
+        }
+        ).catch(err =>{
+            if (err.response)
+              this.setState({wrong_msg: err.response.data.detail});
+            else {
+              this.setState({wrong_msg: 'Server busy or not down'});
+            }
+            console.log(err)
+          });
       }
     });
   };

@@ -25,11 +25,13 @@ class ImageView(viewsets.ModelViewSet):
     def upload(self, request):
         serializer = FileUploadSerializer(data=request.data)
         if not serializer.is_valid():
+            print(serializer.initial_data)
             return Response(status=status.HTTP_400_BAD_REQUEST)
         if serializer.validated_data['type'] == 'IMAGE':
             user = request.user
             image = serializer.validated_data['file']
-            ImageModel.objects.create(uploader=user, image=image)
+            name = serializer.validated_data['name']
+            ImageModel.objects.create(uploader=user, image=image, name=name)
             return Response(status=status.HTTP_200_OK)
         elif serializer.validated_data['type'] == 'VIDEO':
             user = request.user

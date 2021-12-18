@@ -21,7 +21,6 @@ class UserView(viewsets.ModelViewSet):
             email = serializer.data['email']
             user = User.objects.create_user(username=username, email=email, password=password)
             if user.is_active:
-                login(request, user)
                 return Response(status=status.HTTP_201_CREATED)
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -6,6 +6,23 @@ import {Form, Icon, Input, Button, Alert} from 'antd';
 import axios from 'axios';
 
 class Index extends React.Component {
+    csrftoken = this.getCookie("csrftoken");
+    getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
   componentWillMount (){
     this.setState({wrong_msg: ''})
   }
@@ -15,14 +32,18 @@ class Index extends React.Component {
     this.props.form.validateFields ((err, values) => {
       if (!err) {
         console.log ('Received values of form: ', values);
-        axios.post('http://localhost:8000/api/users/register/', values).then(res => {
-          if (res.status == 201){
-              this.props.history.push('/dashboard');
-          }
-        }).catch(err => {
-          console.log(err);
-          this.setState({wrong_msg: 'Please check email format!'})
-        })
+        axios.get('http://localhost:8000/api/users/logout/', {withCredentials: true}).then(res=>{
+          axios.post('http://localhost:8000/api/users/register/', values).then(res => {
+            if (res.status == 201){
+                this.props.history.push('/list');
+            }
+          }).catch(err => {
+            console.log(err.response);
+            this.setState({wrong_msg: err.response.data.detail})
+          })
+        }).catch(
+          e => console.log(e)
+        );
       }
     });
   };

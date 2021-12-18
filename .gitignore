@@ -5,4 +5,3 @@ secret_key
 package-lock.json
 media
 db.sqlite3
-frontend

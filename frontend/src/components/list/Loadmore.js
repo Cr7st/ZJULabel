@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {List, Button, Skeleton} from 'antd';
 import axios from 'axios';
+import { Redirect } from 'react-router';
 
 const count = 5;
 
@@ -10,6 +11,7 @@ class LoadMore extends React.Component {
     loading: false,
     data: [],
     list: [],
+    loggin: true,
   };
 
   componentDidMount () {
@@ -23,9 +25,14 @@ class LoadMore extends React.Component {
   }
 
   getData = callback => {
-    axios.get(this.props.url, {withCredentials: true}).then( res =>
+    axios.get(this.props.url, {withCredentials: true}).then( res =>{
       callback(res)
-    ).catch(err => {
+      console.log(res)
+    }).catch(err => {
+      if (err.response){
+        if (err.response.status === 403)
+          this.setState({loggin: false});
+      }
       console.log(err)
     })
   };
@@ -54,6 +61,8 @@ class LoadMore extends React.Component {
   };
 
   render () {
+    if (!this.state.loggin)
+      return <Redirect to="/"></Redirect>
     const {initLoading, loading, list} = this.state;
     const loadMore = !initLoading && !loading
       ? <div
@@ -82,7 +91,7 @@ class LoadMore extends React.Component {
                 title={item.name}
                 description={item.description}
               />
-              <div>Due {item.end_date}</div>
+              <div>{item.images.length} Images.  Due {item.end_date}</div>
             </Skeleton>
           </List.Item>
         )}

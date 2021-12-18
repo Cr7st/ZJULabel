@@ -5,11 +5,10 @@ from .models import ImageModel
 class FileUploadSerializer(serializers.Serializer):
     file = serializers.FileField()
     type = serializers.ChoiceField(choices=[('IMAGE', 'image'), ('VIDEO', 'video')])
+    name = serializers.CharField(max_length=100)
 
 
 class ImageModelSerializer(serializers.ModelSerializer):
-    type = serializers.ChoiceField(choices=[('IMAGE', 'image'), ('VIDEO', 'video')])
-
     class Meta:
         model = ImageModel
-        fields = ['id', 'uploader', 'image', 'type']
+        fields = ['id', 'image', 'name']

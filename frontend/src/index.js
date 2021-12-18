@@ -7,8 +7,11 @@ import './index.scss';
 import App from './App';
 import Login from './pages/login';
 import Register from './pages/register';
+import List from './pages/list';
+import MyTask from './pages/my_task';
+import PublishTask from './pages/publish';
+import UploadPage from "./pages/upload";
 import Dashboard from './pages/dashboard';
-import Grid from './pages/layout/grid';
 import GridLayout from './pages/layout/gridLayout';
 import FormElements from './pages/form/form-elements';
 import FormControls from './pages/form/form-controls';
@@ -24,8 +27,7 @@ import Typography from './pages/components/typography';
 import BasicCalendar from './pages/calendar/basic-calendar';
 import NoticeCalendar from './pages/calendar/notice-calendar';
 import SelectableCalendar from './pages/calendar/selectable-calendar';
-import List from './pages/list';
-import ListMine from "./pages/list_mine";
+import ListMine from "./pages/my_task";
 import Charts from './pages/charts';
 import Profile from './pages/profile';
 import Table from './pages/table';
@@ -65,8 +67,10 @@ const routing = (
 
       <Route exact path="/" component={Login} />
       <Route exact path="/list" component={List} />
+      <Route exact path="/my_task" component={MyTask} />
       <Route exact path="/register" component={Register} />
-      {/* <Route exact path="/upload" component={Upload} /> */}
+      <Route exact path="/publish" component={PublishTask} />
+      <Route exact path="/upload" component={UploadPage} />
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/list_mine" component={ListMine} />
       <Route exact path="/layout/gridLayout" component={GridLayout} />
