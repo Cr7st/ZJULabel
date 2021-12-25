@@ -52,7 +52,7 @@ class Layouts extends React.Component {
                     </Link>
                 </Menu.Item>
                 <Menu.Item key="3">
-                    <Link to="/create_task">
+                    <Link to="/publish">
                       <div class>
                         <span> CREATE TASK </span>
                       </div>
@@ -66,7 +66,7 @@ class Layouts extends React.Component {
                     </Link>
                 </Menu.Item>
                 <Menu.Item key="5">
-                    <Link to="/my_image">
+                    <Link to="/images">
                       <div class>
                         <span> MY IMAGE </span>
                       </div>

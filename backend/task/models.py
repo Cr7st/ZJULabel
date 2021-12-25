@@ -11,4 +11,5 @@ class TaskModel(models.Model):
     description = models.TextField()
     uploader = models.ForeignKey(User, on_delete=models.CASCADE)
     end_date = models.DateField()
+    #status = models.CharField(max_length=10, default="RUNNING")
     images = models.ManyToManyField(ImageModel, blank=True)
