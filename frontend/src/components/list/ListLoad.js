@@ -2,6 +2,8 @@ import * as React from 'react';
 import {List, Button, Skeleton} from 'antd';
 import axios from 'axios';
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
+import Annotation from '../../pages/Annotate';
 
 class ListLoad extends React.Component {
   state = {
@@ -82,19 +84,21 @@ class ListLoad extends React.Component {
         itemLayout="horizontal"
         loadMore={loadMore}
         dataSource={list}
-        renderItem={item => (
-          <List.Item actions={[<a>accept</a>]}>
-            <Skeleton title={false} loading={item.loading} active>
-              <List.Item.Meta
-                title={item.name}
-                description={item.description}
-              />
-              {!initLoading && !loading
-              ? <div>{item.images.length} Images.  Due {item.end_date}</div>
-              : null}
-            </Skeleton>
-          </List.Item>
-        )}
+        renderItem={item => {
+          return (
+            <List.Item actions={[<Link to={{pathname:"/annotate", state:{task: item}}} >accept</Link>]}>
+              <Skeleton title={false} loading={item.loading} active>
+                <List.Item.Meta
+                  title={item.name}
+                  description={item.description}
+                />
+                {!initLoading && !loading
+                ? <div>{item.images.length} Images.  Due {item.end_date}</div>
+                : null}
+              </Skeleton>
+            </List.Item>
+          )
+        }}
       />
     );
   }

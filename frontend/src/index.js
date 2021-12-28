@@ -12,6 +12,7 @@ import MyTask from './pages/MyTask';
 import Images from './pages/Images';
 import PublishTask from './pages/publish';
 import UploadPage from "./pages/upload";
+import Annotation from './pages/Annotate';
 import Dashboard from './pages/dashboard';
 import GridLayout from './pages/layout/gridLayout';
 import FormElements from './pages/form/form-elements';
@@ -72,6 +73,10 @@ const routing = (
       <Route exact path="/register" component={Register} />
       <Route exact path="/publish" component={PublishTask} />
       <Route exact path="/upload" component={UploadPage} />
+      <Route exact path="/annotate" render={({location}) => {
+        const state = location.state;
+        return <Annotation task={state.task} />
+      }} />
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/layout/gridLayout" component={GridLayout} />
       <Route exact path="/form/form-elements" component={FormElements} />

@@ -4,7 +4,7 @@ import { IntlProvider, addLocaleData } from 'react-intl';
 
 
 import Layouts from './components/Layouts'
-import '../src/styles/global.scss';
+//import '../src/styles/global.scss';
 
 function App() {
   return (

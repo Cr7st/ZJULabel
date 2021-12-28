@@ -1,3 +1,10 @@
+@import url("https://rsms.me/inter/inter.css");
+
+:root { font-family: 'Inter', sans-serif; }
+@supports (font-variation-settings: normal) {
+  :root { font-family: 'Inter var', sans-serif; }
+}
+
 
 @font-face {
   font-family: 'HelveticaNeue';
@@ -6,7 +13,7 @@
   font-style: normal;
 }
 
-@font-face {
+/* @font-face {
   font-family: 'HelveticaNeue';
   src:  url(data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAA0jUABEAAAAIrkwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAANIuAAAABwA
 AAAcYYN2MUdERUYAA0DcAAADHQAABMJLQktFR1BPUwADRHwAAAQ5AAAG+OwfZU9HU1VCAAND/AAA
@@ -3789,4 +3796,4 @@ Ttfr5/nv2KdbdKtu06/odt0RvxSfsEP2LTts37Hv2vN2xI7aC3bMjv8FSH++xgAAAAAAAAEAAAAA
   font-style: normal;
 }
 
-
+ */

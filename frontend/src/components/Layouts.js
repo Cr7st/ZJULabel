@@ -39,35 +39,35 @@ class Layouts extends React.Component {
                 onOpenChange={this.onOpenChange}  mode="vertical">
                 <Menu.Item key="1">
                     <Link to="/list">
-                      <div class>
+                      <div>
                         <span> ALL TASK </span>
                       </div>
                     </Link>
                 </Menu.Item>
                 <Menu.Item key="2">
                     <Link to="/my_task">
-                      <div class>
+                      <div>
                         <span> MY TASK </span>
                       </div>
                     </Link>
                 </Menu.Item>
                 <Menu.Item key="3">
                     <Link to="/publish">
-                      <div class>
+                      <div>
                         <span> CREATE TASK </span>
                       </div>
                     </Link>
                 </Menu.Item>
                 <Menu.Item key="4">
                     <Link to="/upload">
-                      <div class>
+                      <div>
                         <span> UPLOAD </span>
                       </div>
                     </Link>
                 </Menu.Item>
                 <Menu.Item key="5">
                     <Link to="/images">
-                      <div class>
+                      <div>
                         <span> MY IMAGE </span>
                       </div>
                     </Link>
@@ -90,7 +90,6 @@ class Layouts extends React.Component {
                 }}
                 className={this.state.collapsed ? "collapsed mainContnet " : "mainContnet"}
                 >
-               
                 {this.props.children}
                 </Content>
               </Layout>
