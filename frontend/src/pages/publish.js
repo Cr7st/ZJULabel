@@ -4,6 +4,7 @@ import {Form, Input, Col, Row, Card, Button, DatePicker, message} from 'antd';
 import TransferLoad from '../components/TranseferLoad';
 import { Redirect } from 'react-router';
 import axios from 'axios';
+import getCookie from '../components/cookie_loader';
 
 const { TextArea } = Input;
 
@@ -12,22 +13,7 @@ class PublishTask extends React.Component {
         loggin: true,
     }
 
-    csrftoken = this.getCookie("csrftoken");
-    getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
+    csrftoken = getCookie("csrftoken");
 
     handleSubmit = e => {
         e.preventDefault();

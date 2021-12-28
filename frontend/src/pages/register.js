@@ -4,24 +4,10 @@ import logo from '../static/images/logo.png';
 import LayoutLogin from '../components/LayoutLogin';
 import {Form, Icon, Input, Button, Alert} from 'antd';
 import axios from 'axios';
+import getCookie from '../components/cookie_loader';
 
 class Index extends React.Component {
-    csrftoken = this.getCookie("csrftoken");
-    getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-          var cookies = document.cookie.split(';');
-          for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-          }
-        }
-        return cookieValue;
-    }
+    csrftoken = getCookie("csrftoken");
 
   componentWillMount (){
     this.setState({wrong_msg: ''})
