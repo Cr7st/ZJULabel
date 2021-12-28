@@ -16,4 +16,4 @@ class TaskModel(models.Model):
 
 class COCODatasetModel(models.Model):
     task = models.ForeignKey(TaskModel, on_delete=models.SET_NULL, null=True)
-    dataset_file = models.FileField(upload_to='static/datasets')
+    dataset_file = models.FileField(upload_to='datasets/')

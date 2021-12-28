@@ -3,9 +3,10 @@ from rest_framework.decorators import action
 from rest_framework import status, viewsets
 from .serializers import TaskModelSerializer, COCODatasetModelSerializer, DatasetSubmitSerializer
 from .models import TaskModel, COCODatasetModel
-from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
 import json
-from backend.settings import STATIC_URL
+import os
+from backend.settings import MEDIA_ROOT
 from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
@@ -25,8 +26,7 @@ class TaskView(viewsets.ModelViewSet):
         images = serializer.validated_data['images']
         name = serializer.validated_data['name']
         description = serializer.validated_data['description']
-        end_date = serializer.validated_data['end_date']
-        new_task = TaskModel.objects.create(uploader=user, name=name, description=description, end_date=end_date)
+        new_task = TaskModel.objects.create(uploader=user, name=name, description=description)
         new_task.images.set(images)
         return Response(status=status.HTTP_200_OK)
 
@@ -47,15 +47,15 @@ class COCODatasetView(viewsets.ModelViewSet):
 
     def create(self, request):
         serializer = DatasetSubmitSerializer(data=request.data)
+        print(serializer.initial_data)
         if not serializer.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
         user = request.user
-        user = User.objects.get(pk=user)
         json_data = serializer.validated_data['json_data']
         json_data['info']['contributor'] = user.username
-        task = TaskModel.object.get(pk=serializer.validated_data['task'])
-        with open(STATIC_URL + json_data['info']['description'].replace(' ', '_') + '_COCO.json', 'w') as f:
-            json.dump(json_data, f)
-        COCODatasetModel.object.create(task=task, dataset_file=f)
+        task = TaskModel.objects.get(pk=serializer.validated_data['task'])
+        json_data['info']['url'] = 'http://localhost:8000/media/datasets/' + json_data['info']['description'].replace(' ', '_') + '_COCO.json'
+        file = ContentFile(json.dumps(json_data), name=json_data['info']['description'].replace(' ', '_') + '_COCO.json')
+        COCODatasetModel.objects.create(task=task, dataset_file=file)
         return Response(status=status.HTTP_200_OK)
 

@@ -29,7 +29,6 @@ class PublishTask extends React.Component {
                 const fmData = new FormData()
                 fmData.append("name", values['name']);
                 fmData.append("description", values['description']);
-                fmData.append("end_date", values['end_date'].format("YYYY-MM-DD"));
                 console.log(values['images'].changedValue);
                 let i, len;
                 for ( i = 0, len = values['images'].changedValue.length; i < len; i++){   
@@ -39,6 +38,8 @@ class PublishTask extends React.Component {
                 axios.post('http://localhost:8000/api/tasks/publish/', fmData, config).then(res => {
                     if (res.status === 200){
                         console.log("publish success");
+                        window.location.reload();
+                        message.success("Successfullt published a task!");
                     }
                 }).catch(err => {
                     if (err.response){
@@ -83,13 +84,6 @@ class PublishTask extends React.Component {
                 <Form.Item label={'Discription:'}>
                     {getFieldDecorator('description')
                     (<TextArea rows={3} placeholder="Description" />)}
-                </Form.Item>
-                <Form.Item label={'End Date:'}>
-                    {getFieldDecorator('end_date', {
-                        rules: [
-                            {required: true, message: 'Please input end date!'},
-                        ]
-                    })(<DatePicker />)}
                 </Form.Item>
                 <Form.Item label={'Images:'}>
                     {getFieldDecorator('images', {

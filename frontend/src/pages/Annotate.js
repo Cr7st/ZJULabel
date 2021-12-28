@@ -4,6 +4,7 @@ import axios from 'axios';
 import Layouts from '../components/Layouts';
 import { message } from "antd";
 import "../styles/annotation.css";
+import getCookie from '../components/cookie_loader';
 
 const categories = [
   {'supercategory': 'human', 'id': 1, 'name': 'man'},
@@ -26,7 +27,10 @@ class Annotate extends React.Component {
     images: [{src: "", name: "", regions: [], id: null}],
     selectedImage: 0,
     viewedAll: false,
+    submitted: false,
   }
+  
+  csrftoken = getCookie("csrftoken");
 
   getData = async (imagesID) => {
       const images = [];
@@ -63,9 +67,9 @@ class Annotate extends React.Component {
   }
 
   componentDidMount = () => {
-    const {name, description, images} = this.props.task;
+    const {name, description, images, id} = this.props.task;
     this.getData(images).then(res => {
-      this.setState({name: name, description: description, images: res, loading: false});
+      this.setState({task_id: id, name: name, description: description, images: res, loading: false});
     }).catch( err=>{
       console.log(err);
     })
@@ -108,7 +112,7 @@ class Annotate extends React.Component {
             'bbox': bbox,
             'category_id': categories.find(item => {
               return item.name === MainLayoutState.images[i].regions[j].cls;
-            }).id,
+            })['id'],
             'id': parseInt(MainLayoutState.images[i].regions[j].id)
           })
         }
@@ -117,9 +121,39 @@ class Annotate extends React.Component {
     return annotations;
   }
 
+  submitAnnotation = (dataset, type) => {
+    const fmData = new FormData();
+    fmData.append('task', this.state.task_id);
+    if (type === 'COCO'){
+      fmData.append('json_data', dataset);
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "X-CSRFToken": this.csrftoken
+        },
+        withCredentials: true
+      }
+      axios.post('http://localhost:8000/api/datasets/COCO/', fmData, config).then(res => {
+        if (res.status === 201){
+          console.log("submit success");
+          message.success("成功提交任务！");
+          this.setState({submitted: true})
+          return true;
+        }
+      }).catch(err => {
+        message.error("An error took place!");
+        console.log(err);
+        return false;
+      })
+    }
+  }
+
   handleExit = (MainLayoutState) => {
     if (!this.state.viewedAll){
       message.error('您尚有未浏览的图片！');
+      return;
+    } else if (this.state.submitted){
+      message.error('您已经提交过了，请直接退出');
       return;
     }
     let date = new Date();
@@ -155,6 +189,7 @@ class Annotate extends React.Component {
     dataset['annotations'] = this.getAnnotations(MainLayoutState);
     console.log(dataset);
     console.log(MainLayoutState); 
+    this.submitAnnotation(JSON.stringify(dataset), 'COCO');
   }
 
   render(){
