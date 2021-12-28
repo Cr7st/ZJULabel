@@ -4,7 +4,7 @@ from django.contrib import admin
 from .models import TaskModel
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('id', 'uploader', 'name', 'end_date')
+    list_display = ('id', 'uploader', 'name')
 
 # Register your models here.
 

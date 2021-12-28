@@ -10,6 +10,10 @@ class TaskModel(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField()
     uploader = models.ForeignKey(User, on_delete=models.CASCADE)
-    end_date = models.DateField()
-    #status = models.CharField(max_length=10, default="RUNNING")
+    status = models.CharField(max_length=10, default="RUNNING")
     images = models.ManyToManyField(ImageModel, blank=True)
+
+
+class COCODatasetModel(models.Model):
+    task = models.ForeignKey(TaskModel, on_delete=models.SET_NULL, null=True)
+    dataset_file = models.FileField(upload_to='static/datasets')

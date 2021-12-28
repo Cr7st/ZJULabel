@@ -1,9 +1,11 @@
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status, viewsets
-from .serializers import CreateTaskSerializer, TaskModelSerializer
-from .models import TaskModel
-from image.models import ImageModel
+from .serializers import TaskModelSerializer, COCODatasetModelSerializer, DatasetSubmitSerializer
+from .models import TaskModel, COCODatasetModel
+from django.contrib.auth.models import User
+import json
+from backend.settings import STATIC_URL
 from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
@@ -36,3 +38,24 @@ class TaskView(viewsets.ModelViewSet):
             serializer = self.serializer_class(instance=model)
             data_list.append(serializer.data)
         return Response(data_list)
+
+
+class COCODatasetView(viewsets.ModelViewSet):
+    queryset = COCODatasetModel.objects.all()
+    serializer_class = COCODatasetModelSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request):
+        serializer = DatasetSubmitSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        user = request.user
+        user = User.objects.get(pk=user)
+        json_data = serializer.validated_data['json_data']
+        json_data['info']['contributor'] = user.username
+        task = TaskModel.object.get(pk=serializer.validated_data['task'])
+        with open(STATIC_URL + json_data['info']['description'].replace(' ', '_') + '_COCO.json', 'w') as f:
+            json.dump(json_data, f)
+        COCODatasetModel.object.create(task=task, dataset_file=f)
+        return Response(status=status.HTTP_200_OK)
+
