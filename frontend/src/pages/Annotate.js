@@ -7,15 +7,26 @@ import "../styles/annotation.css";
 import getCookie from '../components/cookie_loader';
 
 const categories = [
-  {'supercategory': 'human', 'id': 1, 'name': 'man'},
-  {'supercategory': 'human', 'id': 2, 'name': 'woman'},
-  {'supercategory': 'animal', 'id': 3, 'name': 'cat'},
-  {'supercategory': 'animal', 'id': 4, 'name': 'dog'},
-  {'supercategory': 'object', 'id': 5, 'name': 'ball'},
-  {'supercategory': 'object', 'id': 6, 'name': 'mouse'},
-  {'supercategory': 'ovehicle', 'id': 7, 'name': 'bicycle'},
-  {'supercategory': 'ovehicle', 'id': 8, 'name': 'car'},
-  {'supercategory': 'ovehicle', 'id': 9, 'name': 'boat'},
+  {'supercategory': 'Person', 'id': 1, 'name': 'Person'},
+  {'supercategory': 'Animal', 'id': 2, 'name': 'Bird'},
+  {'supercategory': 'Animal', 'id': 3, 'name': 'Cat'},
+  {'supercategory': 'Animal', 'id': 4, 'name': 'Cow'},
+  {'supercategory': 'Animal', 'id': 5, 'name': 'Dog'},
+  {'supercategory': 'Animal', 'id': 6, 'name': 'Horse'},
+  {'supercategory': 'Animal', 'id': 7, 'name': 'Sheep'},
+  {'supercategory': 'Vehicle', 'id': 8, 'name': 'Aeroplane'},
+  {'supercategory': 'Vehicle', 'id': 9, 'name': 'Bicycle'},
+  {'supercategory': 'Vehicle', 'id': 10, 'name': 'Boat'},
+  {'supercategory': 'Vehicle', 'id': 11, 'name': 'Bus'},
+  {'supercategory': 'Vehicle', 'id': 12, 'name': 'Car'},
+  {'supercategory': 'Vehicle', 'id': 13, 'name': 'Motorbike'},
+  {'supercategory': 'Vehicle', 'id': 14, 'name': 'Train'},
+  {'supercategory': 'Indoor', 'id': 15, 'name': 'Bottle'},
+  {'supercategory': 'Indoor', 'id': 16, 'name': 'Chair'},
+  {'supercategory': 'Indoor', 'id': 17, 'name': 'Dining table'},
+  {'supercategory': 'Indoor', 'id': 18, 'name': 'Potted plant'},
+  {'supercategory': 'Indoor', 'id': 19, 'name': 'Sofa'},
+  {'supercategory': 'Indoor', 'id': 20, 'name': 'TV'},
 ]
 
 class Annotate extends React.Component {
@@ -75,7 +86,7 @@ class Annotate extends React.Component {
     })
   }
 
-  getAnnotations = (MainLayoutState) => {
+  extractCOCOAnnotations = (MainLayoutState) => {
     let annotations = [];
     for (let i = 0; i < MainLayoutState.images.length; i++){
       for (let j = 0; j < MainLayoutState.images[i].regions.length; j++){
@@ -134,11 +145,12 @@ class Annotate extends React.Component {
         withCredentials: true
       }
       axios.post('http://localhost:8000/api/datasets/COCO/', fmData, config).then(res => {
-        if (res.status === 201){
-          console.log("submit success");
+        if (res.status === 200){
           message.success("成功提交任务！");
-          this.setState({submitted: true})
+          this.setState({submitted: true});
           return true;
+        } else {
+          message.error(res.data.msg)
         }
       }).catch(err => {
         message.error("An error took place!");
@@ -146,6 +158,70 @@ class Annotate extends React.Component {
         return false;
       })
     }
+    else if (type === 'VOC'){
+      let url = "http://127.0.0.1:8000/api/datasets/VOC"
+  
+      const data = {
+        "images": this.state.images.map(item => {
+          return item.id;
+        }),
+        "annotations": dataset,
+      }
+      axios.post(url, data, {headers: {"Content-Type": "application/json"}}).then(
+        res => {
+          if (res.status === 200 && res.data.code === 1) {
+            message.success(res.data.msg);
+            this.setState({submitted: true});
+            console.log("成功提交任务！")
+          }
+          else {
+            message.error(res.data.msg)
+            console.log(res)
+          }
+        }
+      ).catch((err) =>{
+          console.log(err)
+      })
+    }
+  }
+
+  extractVOCAnnotations = (MainLayoutState) => {
+    var annotations = []
+    MainLayoutState.images.forEach((image) => {
+      var annotation = {}
+      annotation["folder"] = "ImageSets"
+      annotation["file_name"] = image.name
+      annotation["size"] = {
+        "height": image.pixelSize.h,
+        "width": image.pixelSize.w,
+        "depth": 3,
+      }
+      annotation["segmented"] = 0
+      var objects = []
+      image.regions.forEach((region) => {
+        var object = {}
+        object["name"] = region.cls
+        object["bndbox"] = {
+          "xmin": region.x,
+          "xmax": region.x+region.w,
+          "ymin": region.y,
+          "ymax": region.y+region.h,
+        }
+        object["truncated"] = 0
+        object["difficult"] = 0
+        if (region.tags) {
+          for (var tag of region.tags) {
+            if (tag === "truncated") object["truncated"] = 1
+            if (tag === "difficult") object["difficult"] = 1
+          }
+        }
+        // console.log(object)
+        objects.push(object)
+      })
+      annotation["object"] = objects
+      annotations.push({"annotation": annotation})
+    })
+    return annotations;
   }
 
   handleExit = (MainLayoutState) => {
@@ -186,19 +262,22 @@ class Annotate extends React.Component {
       }
     });
     dataset['categories'] = categories;
-    dataset['annotations'] = this.getAnnotations(MainLayoutState);
-    console.log(dataset);
-    console.log(MainLayoutState); 
+    dataset['annotations'] = this.extractCOCOAnnotations(MainLayoutState);
     this.submitAnnotation(JSON.stringify(dataset), 'COCO');
+    this.submitAnnotation(this.extractVOCAnnotations(MainLayoutState), 'VOC');
   }
 
   render(){
     const {images, loading, selectedImage, description} = this.state;
     if (loading)
-      return <div></div>
+      return (
+        <Layouts title="assets" classname="grid">
+          <div></div>
+        </Layouts>
+      )
     else
       return(
-        <div>
+        <Layouts title="assets" classname="grid">
           <ReactImageAnnotate
             labelImages
             regionClsList={categories.map(item => {return item.name})}
@@ -213,7 +292,7 @@ class Annotate extends React.Component {
             onNextImage={this.handleNext}
             onPrevImage={this.handlePrev}
           /> 
-        </div>
+        </Layouts>
     )
   }
 };
