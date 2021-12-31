@@ -3,7 +3,7 @@ import {Transfer, Spin} from 'antd';
 import axios from 'axios';
 import { Redirect } from 'react-router';
 
-class ListLoad extends React.Component {
+class TransferLoad extends React.Component {
   state = {
     initLoading: true,
     data: [],
@@ -84,4 +84,4 @@ class ListLoad extends React.Component {
     );
   }
 }
-export default ListLoad;
+export default TransferLoad;

@@ -13,27 +13,7 @@ import Images from './pages/Images';
 import PublishTask from './pages/publish';
 import UploadPage from "./pages/upload";
 import Annotation from './pages/Annotate';
-import Dashboard from './pages/dashboard';
-import GridLayout from './pages/layout/gridLayout';
-import FormElements from './pages/form/form-elements';
-import FormControls from './pages/form/form-controls';
-import FormComponents from './pages/form/form-components';
-import Affix from './pages/navigation/affix';
-import Dropdown from './pages/navigation/dropdown';
-import Menu from './pages/navigation/menu';
-import Pagination from './pages/navigation/pagination';
-import PageHeader from './pages/navigation/pageheader';
-import Steps from './pages/navigation/steps';
-import Buttons from './pages/components/buttons';
-import Typography from './pages/components/typography';
-import BasicCalendar from './pages/calendar/basic-calendar';
-import NoticeCalendar from './pages/calendar/notice-calendar';
-import SelectableCalendar from './pages/calendar/selectable-calendar';
-import Charts from './pages/charts';
 import Profile from './pages/profile';
-import Table from './pages/table';
-import LanguageSwitcher from './pages/language-switcher';
-import Docs from './pages/docs';
 
 import {Route, Link, Redirect,Switch, BrowserRouter as Router} from 'react-router-dom';
 
@@ -77,35 +57,7 @@ const routing = (
         const state = location.state;
         return <Annotation task={state.task} />
       }} />
-      <Route exact path="/dashboard" component={Dashboard} />
-      <Route exact path="/layout/gridLayout" component={GridLayout} />
-      <Route exact path="/form/form-elements" component={FormElements} />
-      <Route exact path="/form/form-controls" component={FormControls} />
-      <Route exact path="/form/form-components" component={FormComponents} />
-      <Route exact path="/navigation/affix" component={Affix} />
-      <Route exact path="/navigation/dropdown" component={Dropdown} />
-      <Route exact path="/navigation/menu" component={Menu} />
-      <Route exact path="/navigation/pagination" component={Pagination} />
-      <Route exact path="/navigation/pageheader" component={PageHeader} />
-      <Route exact path="/navigation/steps" component={Steps} />
-      <Route exact path="/components/buttons" component={Buttons} />
-      <Route exact path="/components/typography" component={Typography} />
-      <Route exact path="/calendar/basic-calendar" component={BasicCalendar} />
-      <Route
-        exact
-        path="/calendar/notice-calendar"
-        component={NoticeCalendar}
-      />
-      <Route
-        exact
-        path="/calendar/selectable-calendar"
-        component={SelectableCalendar}
-      />
-      <Route exact path="/charts" component={Charts} />
       <Route exact path="/profile" component={Profile} />
-      <Route exact path="/table" component={Table} />
-      <Route exact path="/language-switcher" component={LanguageSwitcher} />
-      <Route exact path="/docs" component={Docs} />
       <Route path="*" component={NoMatchPage} />
   </Switch>
   </Router>

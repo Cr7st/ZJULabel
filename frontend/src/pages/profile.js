@@ -51,31 +51,24 @@ class Profile extends React.Component {
                     <img src={user} />
                   </div>
                   <div className="personal-info">
-                    <h2>Jeremy Rose</h2>
+                    <h2>郑博文</h2>
                     <h4 className="user-designation m-b-10">
-                      Product Designer
+                      软工1902
                     </h4>
                     <p>
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      {' '}
-                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                      {' '}
                     </p>
                   </div>
                   <div className="contact-info">
                     <h2 className="after-underline">Contact Information</h2>
                     <Form className="m-t-15 m-b-20">
-                      <Form.Item label="Phone No" className="contact-form">
-                        <Input placeholder={9876543210} />
+                      <Form.Item label="学号" className="contact-form">
+                        <p>3190103037</p>
                       </Form.Item>
-                      <Form.Item label="Email" className="contact-form">
-                        <Input placeholder="Enter Your Email Address ...." />
-                      </Form.Item>
-                      <Form.Item label="Address" className="contact-form">
-                        <TextArea placeholder="Enter Your  Address ...." />
+                      <Form.Item label="邮箱" className="contact-form">
+                        <p>3190103037@zju.edu.cn</p>
                       </Form.Item>
                       <Form.Item label="Site" className="contact-form">
-                        <Input placeholder="Enter your site url..." />
+                        <a href='https://github.com/Cr7st'>https://github.com/Cr7st</a>
                       </Form.Item>
                     </Form>
                   </div>

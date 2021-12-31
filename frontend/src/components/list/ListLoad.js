@@ -2,8 +2,6 @@ import * as React from 'react';
 import {List, Button, Skeleton, Divider, Icon, message} from 'antd';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
-import Annotation from '../../pages/Annotate';
 
 class ListLoad extends React.Component {
   state = {

@@ -3,7 +3,7 @@ import logo from '../static/images/logo.png';
 import avatar from '../static/images/flat-avatar.png';
 import axios from 'axios'
 
-import {Route, Link, BrowserRouter as Router} from 'react-router-dom';
+import { Link, BrowserRouter as Router} from 'react-router-dom';
 
 import { Menu, Input, Avatar} from 'antd';
 
@@ -47,7 +47,7 @@ class HeaderDiv extends React.Component {
       >
 
         <Menu.Item key="brand-logo" className="brand-logo">
-          <Link to="/dashboard">
+          <Link to="/list">
             <img src={logo} className="m-r-5" />
             <span>ZJULabel</span>
           </Link>

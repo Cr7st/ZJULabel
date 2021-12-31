@@ -20,7 +20,7 @@ class Login extends React.Component {
               if (res.data == 'login fail')
                 this.setState({wrong_msg: 'Wrong password or user doesn\'t exist'});
               else
-                this.props.history.push('/dashboard');
+                this.props.history.push('/list');
             }
           }).catch(err => {
             console.log(err);
