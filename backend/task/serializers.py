@@ -5,7 +5,8 @@ from .models import TaskModel, COCODatasetModel
 class TaskModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskModel
-        fields = ['id', 'name', 'description', 'images']
+        fields = ['id', 'name', 'description', 'images', 'status']
+
 
 class COCODatasetModelSerializer(serializers.ModelSerializer):
     class Meta:

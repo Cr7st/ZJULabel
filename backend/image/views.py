@@ -4,14 +4,48 @@ from rest_framework import status, viewsets
 from .serializers import FileUploadSerializer, ImageModelSerializer, ImagePreviewSerializer
 from .models import ImageModel
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.renderers import JSONRenderer
-from PIL import Image
+import datetime, os
+from backend.settings import MEDIA_ROOT
+import cv2
 
 # Create your views here.
 
 
 def get_images_from_video(video):
-    pass
+    video_name = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + '_' + video.name.replace(' ', '_').split('.')[0]
+    video_abs_path = MEDIA_ROOT + '/' + video_name + '.' + video.name.split('.')[-1]
+    print(video_abs_path)
+    try:
+        with open(video_abs_path, 'wb+') as f:
+            f.write(video.read())
+    except Exception as e:
+        raise e
+    vc = cv2.VideoCapture(video_abs_path)
+    c = 0
+    images = []
+    frame_rate = 200  # 帧数截取间隔（每隔200帧截取一帧）
+    if vc.isOpened():  # 判断是否正常打开
+        try:
+            while (True):
+                ret, frame = vc.read()
+                if (ret):
+                    if (c % frame_rate == 0):
+                        file_name = video_name + '_' + str(c) + ".jpg"
+                        cv2.imencode('.jpg', frame)[1].tofile(MEDIA_ROOT + '/images/' + file_name)
+                        images.append(['images/' + file_name, file_name])
+                    c += 1
+                    cv2.waitKey(0)
+                else:
+                    # print("所有帧都已经保存完成")
+                    break
+            vc.release()
+
+        except Exception as e:
+            raise e
+    else:
+        raise Exception("视频打开失败")
+    os.remove(video_abs_path)
+    return images
 
 
 class ImageView(viewsets.ModelViewSet):
@@ -38,9 +72,15 @@ class ImageView(viewsets.ModelViewSet):
         elif serializer.validated_data['type'] == 'VIDEO':
             user = request.user
             file = serializer.validated_data['file']
-            images = get_images_from_video(file)
+            try:
+                images = get_images_from_video(file)
+            except Exception as e:
+                print(e)
+                return Response(status=500, data={'msg': '无法从该文件中截取图片'})
             for image in images:
-                ImageModel.objects.create(uploader=user, image=image)
+                print(image)
+                ImageModel.objects.create(uploader=user, image=image[0], name=image[1])
+            return Response(status=status.HTTP_200_OK, data={'msg': '成功上传并生成截图'})
 
     @action(methods=['GET'], url_path='pre_list', detail=False)
     def pre_list(self, request):
