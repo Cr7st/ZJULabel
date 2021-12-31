@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {List, Button, Skeleton} from 'antd';
+import {List, Button, Skeleton, Divider, Icon, message} from 'antd';
 import axios from 'axios';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -25,7 +25,13 @@ class ListLoad extends React.Component {
   }
 
   getData = callback => {
-    axios.get(this.props.url, {withCredentials: true}).then( res =>{
+    const config = this.props.csrftoken ? {withCredentials: true} : {
+      withCredentials: true,
+      headers: {
+        "X-CSRFToken": this.csrftoken,
+      }
+    };
+    axios.get(this.props.url, config).then( res =>{
       callback(res)
       console.log(res)
     }).catch(err => {
@@ -64,6 +70,7 @@ class ListLoad extends React.Component {
     if (!this.state.loggin)
       return <Redirect to="/"></Redirect>
     const {initLoading, loading, list} = this.state;
+    const {renderActionComp} = this.props;
     const loadMore = !initLoading && !loading
       ? <div
           style={{
@@ -76,7 +83,6 @@ class ListLoad extends React.Component {
           <Button onClick={this.onLoadMore}>refresh</Button>
         </div>
       : null;
-
     return (
       <List
         className="demo-loadmore-list"
@@ -85,16 +91,22 @@ class ListLoad extends React.Component {
         loadMore={loadMore}
         dataSource={list}
         renderItem={item => {
+          var action_comp = renderActionComp(item);
+          console.log(action_comp)
           return (
-            <List.Item actions={[<Link to={{pathname:"/annotate", state:{task: item}}} >accept</Link>]}>
+            <List.Item>
               <Skeleton title={false} loading={item.loading} active>
                 <List.Item.Meta
                   title={item.name}
                   description={item.description}
                 />
                 {!initLoading && !loading
-                ? <div>{item.images.length} Images.  Due {item.end_date}</div>
+                ? <div>{item.images.length} images</div>
                 : null}
+                <Divider type='vertical'/>
+                <div style={{marginRight: 20}}>
+                  {action_comp}
+                </div>
               </Skeleton>
             </List.Item>
           )

@@ -69,7 +69,7 @@ class PublishTask extends React.Component {
             return <Redirect to="/"></Redirect>
         return (
             <Layouts title="assets" classname="grid">
-            <Card>
+            <Card title="Create Tasks">
             <Row gutter={16}>
             <Col span={7}/>
             <Col span={10} >
