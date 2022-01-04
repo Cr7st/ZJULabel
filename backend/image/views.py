@@ -51,10 +51,15 @@ def get_images_from_video(video):
 class ImageView(viewsets.ModelViewSet):
     serializer_class = ImageModelSerializer
     permission_classes = (IsAuthenticated, )
+    queryset = ImageModel.objects.all()
 
-    def get_queryset(self):
-        user = self.request.user
-        return ImageModel.objects.filter(uploader=user)
+    def list(self, request):
+        json = []
+        set = ImageModel.objects.filter(uploader=request.user)
+        for obj in set:
+            serializer = self.serializer_class(obj)
+            json.append(serializer.data)
+        return Response(data=json)
 
     @action(methods=['POST'], url_path='upload', detail=False)
     def upload(self, request):

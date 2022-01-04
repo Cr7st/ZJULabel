@@ -42,7 +42,7 @@ class Images extends React.Component {
             hoverable
             style={{marginLeft: 20, marginRight: 20, marginTop: 15}}
             loading={this.state.loading}
-            cover={<img alt={item.name} src={item.image} height={200} style={{objectFit: 'cover'}}/>}
+            cover={<img alt={item.name} src={'http://localhost:8000' + item.image} height={200} style={{objectFit: 'cover'}}/>}
           >
             <Meta title={item.name}/>
           </Card>
