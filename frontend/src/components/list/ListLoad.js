@@ -14,11 +14,13 @@ class ListLoad extends React.Component {
 
   componentDidMount () {
     this.getData (res => {
+      var list = res.data.reverse()
       this.setState ({
         initLoading: false,
-        data: res.data,
-        list: res.data,
+        data: list,
+        list: list,
       });
+      console.log(list)
     });
   }
 

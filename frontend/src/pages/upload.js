@@ -29,7 +29,7 @@ class UploadPage extends React.Component {
         axios.post("http://localhost:8000/api/images/upload/", fmData, config).then(res => {
             if (res.status === 200){
                 onSuccess("OK");
-                message.success(res.data['msg']);
+                //message.success(res.data['msg']);
                 console.log("server res: ", res);
             }
         }).catch(err => {

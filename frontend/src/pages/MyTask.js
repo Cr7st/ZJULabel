@@ -13,7 +13,19 @@ class MyTask extends React.Component {
     loading: false,
     data: [],
     list: [],
+    files: []
   };
+
+  getFile = async (data) => {
+    const files = []
+    for (var item of data) {
+      var url = "http://localhost:8000"+item.url
+      var res = await axios.get(url, {responseType: 'blob', withCredentials: true})
+      files.push(res.data)
+    }
+    console.log(files);
+    return files;
+  }
 
   csrftoken = getCookie("csrftoken");
 
@@ -60,7 +72,46 @@ class MyTask extends React.Component {
               >
                 <ListLoad url={'http://localhost:8000/api/tasks/list_finished'} csrftoken={this.csrftoken} renderActionComp={(item) => {
                   var action_comp;
-                  var clickDownload = (event) => {
+                  var clickDownloadVOC = (event) => {
+                    var JSZip = require("jszip"); 
+                    var FileSaver = require('file-saver');
+                    let url = "http://localhost:8000/api/datasets/VOC/download/?task=" + item.id
+                    axios.get(url, {
+                      withCredentials: true, 
+                    }).then(
+                      res => {
+                        if (res.status === 200) {
+                          this.getFile(res.data).then(files => {
+                            const zip = new JSZip();
+                            for (var i = 0; i < files.length; i++) {
+                              zip.file(res.data[i].id + '_VOC.xml', files[i]);
+                            }
+                            var fileName = item.name + "_VOC.zip"
+                            zip.generateAsync({
+                              type: "blob",
+                              compression: "DEFLATE",  // STORE：默认不压缩 DEFLATE：需要压缩
+                              compressionOptions: {
+                                level: 9               // 压缩等级1~9    1压缩速度最快，9最优压缩方式
+                              }
+                            }).then((res) => {
+                              console.log(res)
+                              message.success('正在下载中');
+                              FileSaver.saveAs(res, fileName) // 利用file-saver保存文件
+                            })
+                          })
+                        }
+                        else {
+                          message.error(res.data.msg)
+                          console.log(res)
+                        }
+                      }
+                    ).catch((err) =>{
+                      message.error('下载失败');
+                      console.log(err)
+                    })
+                  }
+
+                  var clickDownloadCOCO = (event) => {
                     axios.get('http://localhost:8000/api/datasets/COCO/download/?task=' + item.id, {
                       withCredentials: true, 
                       responseType: 'blob'
@@ -83,12 +134,24 @@ class MyTask extends React.Component {
                   }
                   action_comp = (
                     <div>
-                      <Button type="primary" shape="round" icon="download" size='default' onClick={clickDownload}>
+                      <Button type="primary" shape="round" icon="download" size='default' onClick={clickDownloadVOC}>
                         VOC
                       </Button>
                       <Divider type='vertical'/>
-                      <Button type="primary" shape="round" icon="download" size='default' onClick={clickDownload}>
+                      <Button type="primary" shape="round" icon="download" size='default' onClick={clickDownloadCOCO}>
                         COCO
+                      </Button>
+                      <Divider type='vertical'/>
+                      <Button type="primary" shape="round" danger={true} size='default' onClick={event => {
+                        axios.post('http://localhost:8000/api/tasks/republish', {'id': item.id}, {withCredentials: true}).then(res=>{
+                          if (res.status === 200){
+                            message.success("已经重新发布！");
+                          }
+                        }).catch(err => {
+                          message.error("发生了一个错误！");
+                        })
+                      }}>
+                        REPUBLISH
                       </Button>
                     </div>
                   )

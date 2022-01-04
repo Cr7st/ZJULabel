@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import TaskModel, COCODatasetModel
+from .models import TaskModel, COCODatasetModel, VOCDatasetModel
 
 
 class TaskModelSerializer(serializers.ModelSerializer):
@@ -14,7 +14,12 @@ class COCODatasetModelSerializer(serializers.ModelSerializer):
         fields = ['task', 'dataset_file']
 
 
-class DatasetSubmitSerializer(serializers.Serializer):
+class COCODatasetSubmitSerializer(serializers.Serializer):
     task = serializers.IntegerField()
     json_data = serializers.JSONField()
 
+
+class VOCDatasetModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VOCDatasetModel
+        fields = '__all__'

@@ -66,7 +66,13 @@ class Index extends React.Component {
             </Form.Item>
             <Form.Item>
               {getFieldDecorator ('email', {
-                rules: [{required: true, message: 'Please input your Email!'}],
+                rules: [
+                  {required: true, message: 'Please input your Email!'},
+                  {
+                    pattern: /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/,
+                    message: '邮箱格式不正确',
+                  }
+                ],
               }) (
                 <Input
                   prefix={

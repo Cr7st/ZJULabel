@@ -2,10 +2,16 @@ from rest_framework.response import Response
 from django.http import FileResponse
 from rest_framework.decorators import action
 from rest_framework import status, viewsets
-from .serializers import TaskModelSerializer, COCODatasetModelSerializer, DatasetSubmitSerializer
-from .models import TaskModel, COCODatasetModel
+from .serializers import \
+    TaskModelSerializer, \
+    COCODatasetModelSerializer, \
+    COCODatasetSubmitSerializer, \
+    VOCDatasetModelSerializer
+from .models import TaskModel, COCODatasetModel, VOCDatasetModel
+from image.models import ImageModel
 from django.core.files.base import ContentFile
-import json
+from django.core.files import File
+import json, xmltodict
 import os
 from backend.settings import MEDIA_ROOT
 from rest_framework.permissions import IsAuthenticated
@@ -40,6 +46,14 @@ class TaskView(viewsets.ModelViewSet):
             data_list.append(serializer.data)
         return Response(data_list)
 
+    @action(methods=['POST'], url_path='republish', detail=False)
+    def republish(self, request):
+        task_id = request.data.get('id')
+        task = TaskModel.objetcs.get(pk=task_id)
+        task.status = 'RUNNING'
+        task.save()
+        return Response(status=status.HTTP_200_OK)
+
     @action(methods=['GET'], url_path='list_finished', detail=False)
     def list_finished(self, request):
         models = TaskModel.objects.filter(uploader=request.user).filter(status="FINISHED")
@@ -56,8 +70,7 @@ class COCODatasetView(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     def create(self, request):
-        serializer = DatasetSubmitSerializer(data=request.data)
-        print(serializer.initial_data)
+        serializer = COCODatasetSubmitSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
         user = request.user
@@ -81,5 +94,46 @@ class COCODatasetView(viewsets.ModelViewSet):
             'Access-Control-Expose-Headers': 'Content-Disposition'
         })
         return res
+
+
+class VOCDatasetViewset(viewsets.ModelViewSet):
+    serializer_class = VOCDatasetModelSerializer
+    queryset = VOCDatasetModel.objects.all()
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request):
+        images = request.data.get('images')
+        annotations = request.data.get('annotations')
+        task_id = request.data.get('task')
+        if not all([images, annotations]):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        task = TaskModel.objects.get(pk=task_id)
+        for i in range(len(images)):
+            xml_str = xmltodict.unparse(annotations[i])
+            image = ImageModel.objects.get(pk=images[i])
+            task = TaskModel.objects.get(pk=task_id)
+            filename = task.name.replace(' ', '_') + str(images[i]) + '_VOC.xml'
+            file = ContentFile(xml_str, name=filename)
+            VOCDatasetModel.objects.create(task=task, image=image, annotation_file=file)
+        return Response(status=status.HTTP_200_OK)
+
+    @action(methods=['GET'], url_path='download', detail=False)
+    def download(self, request):
+        task_id = int(request.query_params.get('task'))
+        if not isinstance(task_id, int):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        VOCs = VOCDatasetModel.objects.filter(task=task_id)
+        print(task_id)
+        data = []
+        for VOC in VOCs:
+            new_data_item = {
+                'id': VOC.image.id,
+                'url': VOC.annotation_file.url
+            }
+            data.append(new_data_item)
+        print(data)
+        return Response(status=status.HTTP_200_OK, data=data)
+
 
 

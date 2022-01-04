@@ -146,36 +146,41 @@ class Annotate extends React.Component {
       }
       axios.post('http://localhost:8000/api/datasets/COCO/', fmData, config).then(res => {
         if (res.status === 200){
-          message.success("成功提交任务！");
+          message.success("COCO格式成功提交！");
           this.setState({submitted: true});
           return true;
         } else {
           message.error(res.data.msg)
         }
       }).catch(err => {
-        message.error("An error took place!");
+        message.error("COCO格式提交发生错误！");
         console.log(err);
         return false;
       })
     }
     else if (type === 'VOC'){
-      let url = "http://127.0.0.1:8000/api/datasets/VOC"
-  
       const data = {
         "images": this.state.images.map(item => {
           return item.id;
         }),
         "annotations": dataset,
+        "task": this.state.task_id
       }
-      axios.post(url, data, {headers: {"Content-Type": "application/json"}}).then(
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": this.csrftoken
+        },
+        withCredentials: true
+      }
+      axios.post('http://localhost:8000/api/datasets/VOC/', data, config).then(
         res => {
-          if (res.status === 200 && res.data.code === 1) {
-            message.success(res.data.msg);
+          if (res.status === 200) {
+            message.success("VOC格式成功提交！");
             this.setState({submitted: true});
-            console.log("成功提交任务！")
           }
           else {
-            message.error(res.data.msg)
+            message.error("VOC格式提交发生错误！");
             console.log(res)
           }
         }

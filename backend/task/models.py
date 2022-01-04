@@ -17,3 +17,9 @@ class TaskModel(models.Model):
 class COCODatasetModel(models.Model):
     task = models.ForeignKey(TaskModel, on_delete=models.SET_NULL, null=True)
     dataset_file = models.FileField(upload_to='datasets/')
+
+
+class VOCDatasetModel(models.Model):
+    task = models.ForeignKey(TaskModel, on_delete=models.SET_NULL, null=True)
+    image = models.ForeignKey(ImageModel, on_delete=models.CASCADE)
+    annotation_file = models.FileField(upload_to='datasets/')
