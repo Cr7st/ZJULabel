@@ -16,7 +16,7 @@ class Index extends React.Component {
             >
                <div className="d-flex align-items-center justify-content-center vh-100 flex-column">
                     <h1>Page not found</h1>
-                 <Link to="/dashboard"><a>Back to Dashboard Page</a></Link>
+                 <Link to="/list"><a>Back to All Tasks Page</a></Link>
                 </div>
             </Card>
           </Col>

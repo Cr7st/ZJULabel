@@ -33,7 +33,7 @@ const NoMatchPage = () => {
           <div className="card-body">
             <div className="d-flex flex-column align-items-center justify-content-center">
               <h2>Page not found</h2>
-              <Link to="/dashboard">back to dashboard</Link>
+              <Link to="/list">back to all tasks</Link>
             </div>
           </div>
         </Card>

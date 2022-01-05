@@ -13,6 +13,20 @@ class UploadPage extends React.Component {
     };
     csrftoken = getCookie("csrftoken");
 
+    imageTypeCheck = (file, fileList) => {
+        if (!file.type.startsWith('image')){
+            message.error("请上传图片格式文件");
+            return false;
+        } else return true;
+    }
+
+    videoTypeCheck = (file, fileList) => {
+        if (!file.type.startsWith('video')){
+            message.error("请上传视频格式文件");
+            return false;
+        } else return true;
+    }
+    
     uploadFile(options){
         const {onSuccess, onError, file, onProgress, headers, data} = options;
         const fmData = new FormData();
@@ -53,6 +67,7 @@ class UploadPage extends React.Component {
             data:{type:"IMAGE"},
             multiple: true,
             customRequest: this.uploadFile,
+            beforeUpload: this.imageTypeCheck,
             accept: "image/*",
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -74,6 +89,7 @@ class UploadPage extends React.Component {
             data:{type:"VIDEO"},
             multiple: true,
             customRequest: this.uploadFile,
+            beforeUpload: this.videoTypeCheck,
             accept: "video/*",
             headers: {
                 "Content-Type": "multipart/form-data",

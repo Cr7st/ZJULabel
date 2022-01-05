@@ -143,13 +143,7 @@ class MyTask extends React.Component {
                       </Button>
                       <Divider type='vertical'/>
                       <Button type="primary" shape="round" danger={true} size='default' onClick={event => {
-                        axios.post('http://localhost:8000/api/tasks/republish', {'id': item.id}, {withCredentials: true}).then(res=>{
-                          if (res.status === 200){
-                            message.success("已经重新发布！");
-                          }
-                        }).catch(err => {
-                          message.error("发生了一个错误！");
-                        })
+                        message.warning("功能尚在开发中！");
                       }}>
                         REPUBLISH
                       </Button>

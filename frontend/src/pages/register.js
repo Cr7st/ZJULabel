@@ -24,8 +24,8 @@ class Index extends React.Component {
                 this.props.history.push('/list');
             }
           }).catch(err => {
-            console.log(err.response);
-            this.setState({wrong_msg: err.response.data.detail})
+            console.log(err.response.data);
+            this.setState({wrong_msg: JSON.stringify(err.response.data)})
           })
         }).catch(
           e => console.log(e)
