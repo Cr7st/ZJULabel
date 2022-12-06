@@ -24,7 +24,7 @@
 
 所有文档放在 `document` 文件夹中，包括设计报告、用户手册、测试报告、开发体会和小结。
 
-All the documents is placed in `document` directory, including Design Report, Test Report, Manual, Development Experience and Summary.
+All the documents are placed in `document` directory, including Design Report, Test Report, Manual, Development Experience and Summary.
 
 Documents do not necessarily conform to software engineering standard since this project was just the course design of B/S System Software Design in Zhejiang University. lol.
 
@@ -34,7 +34,7 @@ Documents do not necessarily conform to software engineering standard since this
 
 * 第一次进入标注界面时，标注界面的前端样式可能会出现问题，点击后退并重新进入后就会恢复正常，不影响正常使用。
 
-  There may be some problem with the front-end style of the annotation page. It will return to normal by click Back end re-enter. This problem does not affect normal use.
+  There might be some problem with the front-end style of the annotation page. It will return to normal by clicking Back end re-enter. This problem does not affect normal use.
   
 * 使用 Edge 浏览器进入 MY TASK 界面时会有跨域问题无法加载，**请使用 Chrome 或 火狐浏览器！**
 
